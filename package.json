@@ -2,27 +2,27 @@
   "name": "hortifruti",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "src",
   "scripts": {
-    "test:dev": "NODE_OPTIONS=--experimental-vm-modules npx jest --watch",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest",
-    "start": "node src/app.js",
-    "dev": "npx nodemon src/app.js"
+    "dev": "npx nodemon src/server.js",
+    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
+    "test:unit": "npx jest --watch -c jest-unit-config.js",
+    "test:integration": "npx jest --watch -c jest-integration-config.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^4.16.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mysql2": "^3.4.3",
-    "sequelize": "^6.32.1",
-    "uuid": "^9.0.0"
+    "mysql2": "^3.4.3"
   },
   "devDependencies": {
-    "nodemon": "^1.14.9"
+    "jest": "^29.6.1",
+    "nodemon": "^1.14.9",
+    "prisma": "^4.16.2",
+    "supertest": "^6.3.3"
   }
 }
