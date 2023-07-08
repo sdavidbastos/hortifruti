@@ -1,9 +1,4 @@
-import { app } from "./app";
-import { sequelize } from "./config/db.js"
-import 'dotenv/config'
+const app = require("./config/app")
+const env = require("./config/env")
 
-const port = process.env.PORT || 8000
-app.listen(port, () => {
-    sequelize.sync();
-    console.log(`Example app listening on port ${port}`)
-})
+app.listen(env.port, () => console.log(`App listening on port ${env.port}`))
