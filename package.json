@@ -4,10 +4,12 @@
   "description": "",
   "main": "src",
   "scripts": {
-    "dev": "npx nodemon src/server.js",
-    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand",
-    "test:unit": "npx jest --watch -c jest-unit-config.js",
-    "test:integration": "npx jest --watch -c jest-integration-config.js"
+    "start": "node src/server.js",
+    "migrate": "npx prisma migrate dev",
+    "dev": "npx nodemon ./src/server.js",
+    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand --watchAll",
+    "test:unit": "npx jest -c jest-unit-config.js",
+    "test:integration": "npx jest -c jest-integration-config.js"
   },
   "keywords": [],
   "author": "",
@@ -16,8 +18,7 @@
     "@prisma/client": "^4.16.2",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "mysql2": "^3.4.3"
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "jest": "^29.6.1",

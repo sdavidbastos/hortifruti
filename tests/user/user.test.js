@@ -1,7 +1,7 @@
 const request = require('supertest')
 const app = require("../../src/config/app")
 const client = require("../../src/database/prisma-client");
-const { MissingParamError, InvalidParamError } = require('../../src/utils/errors');
+const { MissingParamError, InvalidParamError, ServerError } = require('../../src/utils/errors');
 
 describe('User Route Test Suite', () => {
     afterEach(async () => {
@@ -27,7 +27,9 @@ describe('User Route Test Suite', () => {
             }))
         expect(response.status).toBe(200)
     });
-
+    test('should login user', async () => {
+         
+    })
     test('should throw execption if email is alredy registered', async () => {
         const data = {
             username: 'John Doe',
@@ -67,5 +69,20 @@ describe('User Route Test Suite', () => {
 
         expect(response.body.error).toEqual(new MissingParamError('password').message)
         expect(response.status).toBe(400)
+    });
+
+    test.skip('should throw inetrnal server error', async () => {
+        await client.$disconnect()
+        const data = {
+            username: 'John Doe',
+            email: 'johndoe@example.com',
+            password: '123123'
+        }
+        const response = await request(app)
+            .post('/api/users')
+            .send(data);
+
+        expect(response.body.error).toEqual(new ServerError().message)
+        expect(response.status).toBe(500)
     });
 });
