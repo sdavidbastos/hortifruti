@@ -5,25 +5,26 @@
   "main": "src",
   "scripts": {
     "start": "node src/server.js",
-    "migrate": "npx prisma migrate dev",
+    "migrate": "npx prisma migrate dev --name ",
+    "generate": "npx prisma generate",
     "dev": "npx nodemon ./src/server.js",
-    "test": "jest --colors --noStackTrace --passWithNoTests --runInBand --watchAll",
-    "test:unit": "npx jest -c jest-unit-config.js",
-    "test:integration": "npx jest -c jest-integration-config.js"
+    "test": "npx jest --colors --noStackTrace --passWithNoTests --runInBand --watchAll",
+    "test:unit": "npx jest --no-coverage --colors --noStackTrace --passWithNoTests --runInBand --watchAll -c jest-unit-config.js",
+    "test:integration": "npx jest --no-coverage --colors --noStackTrace --passWithNoTests --runInBand --watchAll -c jest-integration-config.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^4.16.2",
+    "@prisma/client": "^5.0.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1"
   },
   "devDependencies": {
     "jest": "^29.6.1",
-    "nodemon": "^1.14.9",
-    "prisma": "^4.16.2",
+    "prisma": "^5.0.0",
     "supertest": "^6.3.3"
   }
 }
