@@ -1,12 +1,8 @@
 version: "3"
 services:
   app:
-    image: node:18-alpine
-    command: sh -c "npm install && npm run test"
-    ports:
-      - "${PORT}:${PORT}"
-    working_dir: /app
-    user: "${UID}:${GID}"
+    build: .
+    command: sh -c "npm run test:integration"
     volumes:
       - ./:/app
     depends_on:
