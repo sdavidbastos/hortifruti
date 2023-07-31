@@ -1,8 +1,8 @@
 const Encrypter = require("../../src/utils/helpers/encrypter");
+const bcrypt = require("bcrypt")
 
-
-describe('Helper Test Suite', () => {
-  const encrypter = new Encrypter()
+describe('encrypter Test Suite', () => {
+  const encrypter = new Encrypter({cryptor: bcrypt})
   test('authenticates with correct password', async () => {
     const password = 'password123';
     const hashedPassword = await encrypter.hash(password);
