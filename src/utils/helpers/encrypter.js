@@ -1,7 +1,9 @@
-const bcrypt = require('bcrypt')
 const MissingParamError = require('../errors/missing-param-error')
 
-module.exports = class Encrypter {
+class Encrypter {
+  constructor({cryptor}){
+    this.cryptor = cryptor
+  }
   async compare(value, hash) {
     if (!value) {
       throw new MissingParamError('value')
@@ -9,13 +11,15 @@ module.exports = class Encrypter {
     if (!hash) {
       throw new MissingParamError('hash')
     }
-    return await bcrypt.compare(value, hash)
+    return await this.cryptor.compare(value, hash)
   }
 
   async hash(value) {
     if (!value) {
       throw new MissingParamError('value')
     }
-    return await bcrypt.hash(value, 10)
+    return await this.cryptor.hash(value, 10)
   }
 }
+
+module.exports = Encrypter

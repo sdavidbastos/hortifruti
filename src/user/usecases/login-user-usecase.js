@@ -1,42 +1,39 @@
 const { InvalidParamError } = require("../../utils/errors");
-const MissingParamError = require("../../utils/errors/missing-param-error");
 const HttpResponse = require('../../utils/helpers/http-response')
 
-class CreateUserUseCase {
-    constructor({ client, encrypt, token }) {
+class LoginUserUseCase {
+    constructor({ client, token, encrypt }) {
         this.client = client
-        this.encrypt = encrypt
         this.token = token
+        this.encrypt = encrypt
     }
     async execute(httpRequest) {
         try {
-            const { name, password, email } = httpRequest.body;
+            const { password, email } = httpRequest.body;
+
             if (!email) {
                 return HttpResponse.badRequest(new MissingParamError('email'))
             }
             if (!password) {
                 return HttpResponse.badRequest(new MissingParamError('password'))
             }
-            const userAlredyExists = await this.client.user.findUnique({
+            const user = await this.client.user.findUnique({
                 where: {
                     email: email,
                 },
             })
-            if (userAlredyExists) {
-                return HttpResponse.badRequest(new InvalidParamError('already registered email'))
+
+            const passIsValid = await this.encrypt.compare(password, user.password);
+            if (!user || !passIsValid) {
+                return HttpResponse.badRequest(new InvalidParamError('email or password'))
             }
-            const hashPassword = await this.encrypt.hash(password);
-            const user = await this.client.user.create({
-                data: {
-                    name, password: hashPassword, email
-                },
-            });
             const token = await this.token.create(user.id)
             return HttpResponse.ok(token);
         } catch (error) {
+            console.log(error)
             return HttpResponse.serverError()
         }
     }
 }
 
-module.exports = CreateUserUseCase
+module.exports = LoginUserUseCase
