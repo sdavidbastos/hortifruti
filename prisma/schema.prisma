@@ -15,6 +15,49 @@ model User {
   name      String
   password  String
   email     String   @unique()
+  market    Market?
+  role      Role     @default(CONSUMER)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Market {
+  id       String    @id @default(uuid())
+  user     User      @relation(fields: [userId], references: [id])
+  name     String
+  cnpj     String
+  products Product[]
+  userId   String    @unique @map("user_id")
+
+  @@map("markets")
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id    String @id @default(uuid())
+  name  String
+  price Float
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @map("category_id")
+
+  market   Market @relation(fields: [marketId], references: [id])
+  marketId String @map("market_id")
+
+  @@map("products")
+}
+
+enum Role {
+  CONSUMER
+  PRODUCER
+  ADMIN
 }

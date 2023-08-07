@@ -5,7 +5,7 @@
   "main": "src",
   "scripts": {
     "start": "node src/server.js",
-    "migrate": "npx prisma migrate dev --name ",
+    "migrate": "npx prisma migrate dev --name initial",
     "generate": "npx prisma generate",
     "dev": "npx nodemon ./src/server.js",
     "test": "npx jest --colors --noStackTrace --passWithNoTests --runInBand --watchAll",
@@ -23,6 +23,7 @@
     "jsonwebtoken": "^9.0.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "jest": "^29.6.1",
     "prisma": "^5.0.0",
     "supertest": "^6.3.3"
