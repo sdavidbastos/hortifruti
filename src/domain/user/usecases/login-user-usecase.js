@@ -1,5 +1,7 @@
-const { InvalidParamError } = require("../../utils/errors");
-const HttpResponse = require('../../utils/helpers/http-response')
+const { MissingParamError, InvalidParamError } = require("../../../utils/errors");
+const { HttpResponse } = require("../../../utils/helpers/http-response");
+
+
 
 class LoginUserUseCase {
     constructor({ client, token, encrypt }) {
@@ -30,10 +32,9 @@ class LoginUserUseCase {
             const token = await this.token.create(user.id)
             return HttpResponse.ok(token);
         } catch (error) {
-            console.log(error)
             return HttpResponse.serverError()
         }
     }
 }
 
-module.exports = LoginUserUseCase
+module.exports = { LoginUserUseCase }

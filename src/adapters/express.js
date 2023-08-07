@@ -1,12 +1,8 @@
 class ExpressAdapter {
   static execute(useCase) {
     return async (req, res, next) => {
-      const httpRequest = {
-        headers: req.headers,
-        body: req.body
-      }
-      const httpResponse = await useCase.execute(httpRequest)
-      if (httpRequest) {
+      const httpResponse = await useCase.execute(req)
+      if (httpResponse) {
         return res.status(httpResponse.statusCode).json(httpResponse.body)
       }
       next()
@@ -14,4 +10,4 @@ class ExpressAdapter {
   }
 }
 
-module.exports = ExpressAdapter
+module.exports = { ExpressAdapter }

@@ -1,7 +1,7 @@
 const MissingParamError = require('../errors/missing-param-error')
 
 class Encrypter {
-  constructor({cryptor}){
+  constructor({ cryptor }) {
     this.cryptor = cryptor
   }
   async compare(value, hash) {
@@ -22,4 +22,4 @@ class Encrypter {
   }
 }
 
-module.exports = Encrypter
+module.exports = { Encrypter }

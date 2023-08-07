@@ -1,6 +1,5 @@
-const { InvalidParamError } = require("../../utils/errors");
-const MissingParamError = require("../../utils/errors/missing-param-error");
-const HttpResponse = require('../../utils/helpers/http-response')
+const { MissingParamError, InvalidParamError } = require("../../../utils/errors");
+const { HttpResponse } = require("../../../utils/helpers/http-response");
 
 class CreateUserUseCase {
     constructor({ client, encrypt, token }) {
@@ -39,4 +38,4 @@ class CreateUserUseCase {
     }
 }
 
-module.exports = CreateUserUseCase
+module.exports = { CreateUserUseCase }
