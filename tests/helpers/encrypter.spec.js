@@ -1,5 +1,5 @@
-const Encrypter = require("../../src/utils/helpers/encrypter");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const { Encrypter } = require("../../src/utils/helpers/encrypter");
 
 describe('encrypter Test Suite', () => {
   const encrypter = new Encrypter({cryptor: bcrypt})

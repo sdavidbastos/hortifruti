@@ -2,19 +2,13 @@ const request = require('supertest')
 const app = require("../../src/config/app")
 const client = require("../../src/database/prisma-client");
 const { MissingParamError, InvalidParamError } = require('../../src/utils/errors');
-const HelperFactory = require('../../src/utils/helpers/factory');
+const { HelperFactory } = require('../../src/utils/helpers');
+const { UserBuilder } = require('../builders');
 
 describe('User Route Test Suite', () => {
-    const {token} = HelperFactory.execute()
-    afterEach(async () => {
-        await client.user.deleteMany();
-    });
+    const { token } = HelperFactory.execute()
     test('should create user', async () => {
-        const data = {
-            name: 'John Doe',
-            email: 'johndoe@example.com',
-            password: 'password123'
-        }
+        const data = new UserBuilder().build()
         const response = await request(app)
             .post('/api/user')
             .send(data);
@@ -29,11 +23,7 @@ describe('User Route Test Suite', () => {
     });
 
     test('should throw execption if email is alredy registered', async () => {
-        const data = {
-            name: 'John Doe',
-            email: 'johndoe@example.com',
-            password: 'password123'
-        }
+        const data = new UserBuilder().build()
         await client.user.create({ data })
         const response = await request(app)
             .post('/api/user')
@@ -43,11 +33,7 @@ describe('User Route Test Suite', () => {
     });
 
     test('should throw execption if email invalid', async () => {
-        const data = {
-            name: 'John Doe',
-            email: '',
-            password: 'password123'
-        }
+        const data = new UserBuilder().setEmail("").build()
         const response = await request(app)
             .post('/api/user')
             .send(data);
@@ -56,11 +42,7 @@ describe('User Route Test Suite', () => {
         expect(response.status).toBe(400)
     });
     test('should throw execption if password invalid', async () => {
-        const data = {
-            name: 'John Doe',
-            email: 'johndoe@example.com',
-            password: ''
-        }
+        const data = new UserBuilder().setPassword("").build()
         const response = await request(app)
             .post('/api/user')
             .send(data);
