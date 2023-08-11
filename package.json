@@ -8,7 +8,7 @@
     "migrate": "npx prisma migrate dev --name initial",
     "generate": "npx prisma generate",
     "dev": "npx nodemon ./src/server.js",
-    "test": "npx jest --colors --noStackTrace --passWithNoTests --runInBand --watchAll",
+    "test": "npx jest --colors --noStackTrace --passWithNoTests --runInBand --watchAll ",
     "test:unit": "npx jest --no-coverage --colors --noStackTrace --passWithNoTests --runInBand --watchAll -c jest-unit-config.js",
     "test:integration": "npx jest --no-coverage --colors --noStackTrace --passWithNoTests --runInBand --watchAll -c jest-integration-config.js"
   },

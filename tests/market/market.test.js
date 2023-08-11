@@ -1,20 +1,49 @@
 const request = require('supertest')
 const app = require("../../src/config/app")
-const { MarketBuilder } = require('../builders');
-const { HelperFactory } = require('../../src/utils/helpers');
 const client = require('../../src/database/prisma-client');
+const { MarketBuilder, UserBuilder, ProductBuilder } = require('../builders');
+const { HelperFactory } = require('../../src/utils/helpers');
 
 describe('Market Route Test Suite', () => {
     const { token } = HelperFactory.execute()
+    const user = new UserBuilder().setRole("PRODUCER").build()
+    const market = new MarketBuilder().build()
+    const products = [new ProductBuilder().build(), new ProductBuilder().build()]
+
+    beforeAll(async () => {
+        [authorization] = await Promise.all([
+            token.create(user.id),
+            client.user.create({ data: { ...user } }),
+            client.market.create({ data: { ...market, user: { connect: { id: user.id } } } }),
+        ])
+        await Promise.all([
+            client.product.create({ data: { ...products[0], market: { connect: { id: market.id } } } }),
+            client.product.create({ data: { ...products[1], market: { connect: { id: market.id } } } })
+        ])
+    })
     test('should return new market', async () => {
-        const { user, id, ...market } = new MarketBuilder().build()
-        const [auth, _userCreated] = await Promise.all([token.create(user.id), client.user.create({ data: { ...user } })])
+        const producer = new UserBuilder().setRole("PRODUCER").build()
+        const data = new MarketBuilder().build()
+        const [auth] = await Promise.all([token.create(producer.id), client.user.create({ data: { ...producer } })])
         const response = await request(app)
             .post('/api/market')
             .set('Authorization', auth)
-            .send(market);
+            .send({ data });
 
-        expect(response.body).toEqual(expect.objectContaining({ ...market, userId: user.id }))
+        expect(response.body).toEqual(expect.objectContaining({ ...data, userId: producer.id }))
+        expect(response.statusCode).toBe(200)
+    })
+
+    test('should all products of market', async () => {
+
+        const response = await request(app)
+            .get(`/api/market/${market.id}`)
+            .set('Authorization', authorization)
+        expect(response.body).toEqual(expect.arrayContaining(products.map(product => {
+            product.categoryId = null
+            product.marketId = market.id
+            return product
+        })))
         expect(response.statusCode).toBe(200)
     })
 

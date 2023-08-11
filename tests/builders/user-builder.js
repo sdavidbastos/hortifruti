@@ -9,12 +9,7 @@ class UserBuilder {
             role: faker.helpers.arrayElement(['CONSUMER', 'PRODUCER', 'ADMIN']),
         };
     }
-
-    setName(name) {
-        this.user.name = name;
-        return this;
-    }
-
+    
     setEmail(email) {
         this.user.email = email;
         return this;
