@@ -7,19 +7,18 @@ class CreateMarketUseCase {
     }
     async execute(httpRequest) {
         try {
-            const { user, name, cnpj } = httpRequest.body;
+            const { user, data } = httpRequest.body;
             if (user.role === "ADMIN" || user.role === "PRODUCER") {
-                if (!name) {
+                if (!data.name) {
                     return HttpResponse.badRequest(new MissingParamError('name'))
                 }
-                if (!cnpj) {
+                if (!data.cnpj) {
                     return HttpResponse.badRequest(new MissingParamError('cnpj'))
                 }
 
                 const market = await this.client.market.create({
                     data: {
-                        name,
-                        cnpj,
+                        ...data,
                         user: {
                             connect: { id: user.id }
                         }
@@ -30,7 +29,6 @@ class CreateMarketUseCase {
             }
             return HttpResponse.unauthorizedError()
         } catch (error) {
-            console.log("error => ", error)
             return HttpResponse.serverError()
         }
     }

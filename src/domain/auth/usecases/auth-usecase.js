@@ -13,7 +13,8 @@ class AuthUseCase {
             const user = await this.client.user.findUnique({
                 where: {
                     id: id
-                }
+                },
+                include: { market: true }
             })
             if (!user) {
                 return HttpResponse.unauthorizedError()

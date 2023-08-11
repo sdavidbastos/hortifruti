@@ -14,17 +14,15 @@ class CreateProductUseCase {
             if (!data.price) {
                 return HttpResponse.badRequest(new MissingParamError('price'))
             }
-            const market = await this.client.market.findUnique({
-                where: {
-                    userId: user.id
-                }
-            })
+            if (!user.market) {
+                return HttpResponse.unauthorizedError()
+            }
             const product = await this.client.product.create({
                 data: {
                     ...data,
                     market: {
                         connect: {
-                            id: market.id
+                            id: user.market.id
                         }
                     },
                 }
@@ -32,7 +30,6 @@ class CreateProductUseCase {
 
             return HttpResponse.ok(product);
         } catch (error) {
-            console.log("error => ", error)
             return HttpResponse.serverError()
         }
     }

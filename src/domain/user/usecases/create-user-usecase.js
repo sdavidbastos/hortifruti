@@ -9,28 +9,30 @@ class CreateUserUseCase {
     }
     async execute(httpRequest) {
         try {
-            const { name, password, email } = httpRequest.body;
-            if (!email) {
+            const { data } = httpRequest.body;
+            if (!data.email) {
                 return HttpResponse.badRequest(new MissingParamError('email'))
             }
-            if (!password) {
+            if (!data.password) {
                 return HttpResponse.badRequest(new MissingParamError('password'))
             }
             const userAlredyExists = await this.client.user.findUnique({
                 where: {
-                    email: email,
+                    email: data.email,
                 },
             })
             if (userAlredyExists) {
                 return HttpResponse.badRequest(new InvalidParamError('already registered email'))
             }
-            const hashPassword = await this.encrypt.hash(password);
-            const user = await this.client.user.create({
-                data: {
-                    name, password: hashPassword, email
-                },
-            });
-            const token = await this.token.create(user.id)
+            const hashPassword = await this.encrypt.hash(data.password);
+            const [token] = await Promise.all([
+                this.token.create(data.id),
+                this.client.user.create({
+                    data: {
+                        ...data, password: hashPassword
+                    },
+                }),
+            ])
             return HttpResponse.ok(token);
         } catch (error) {
             return HttpResponse.serverError()
