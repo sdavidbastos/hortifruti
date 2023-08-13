@@ -11,26 +11,25 @@ class LoginUserUseCase {
     }
     async execute(httpRequest) {
         try {
-            const { password, email } = httpRequest.body;
-
-            if (!email) {
+            const { data } = httpRequest.body;
+            if (!data.email) {
                 return HttpResponse.badRequest(new MissingParamError('email'))
             }
-            if (!password) {
+            if (!data.password) {
                 return HttpResponse.badRequest(new MissingParamError('password'))
             }
             const user = await this.client.user.findUnique({
                 where: {
-                    email: email,
+                    email: data.email,
                 },
-            })
+            });
+            const passIsValid = await this.encrypt.compare(data.password, user.password);
 
-            const passIsValid = await this.encrypt.compare(password, user.password);
             if (!user || !passIsValid) {
-                return HttpResponse.badRequest(new InvalidParamError('email or password'))
+                return HttpResponse.badRequest(new InvalidParamError('email or password'));
             }
             const token = await this.token.create(user.id)
-            return HttpResponse.ok(token);
+            return HttpResponse.ok({ authorization: token });
         } catch (error) {
             return HttpResponse.serverError()
         }

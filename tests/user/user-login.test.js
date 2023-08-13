@@ -12,11 +12,11 @@ describe('User Login Route Test Suite', () => {
     test('should return token', async () => {
         const password = await encrypter.hash(user.password)
         await client.user.create({ data: { ...user, password } })
-        const input = { email: user.email, password: user.password }
+        const data = { email: user.email, password: user.password }
         const { body } = await request(app)
             .post('/api/login')
-            .send(input);
-        const decoded = await token.verify(body)
+            .send({ data });
+        const decoded = await token.verify(body.authorization)
         expect(user.id).toEqual(decoded.id)
 
     });

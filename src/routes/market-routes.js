@@ -5,6 +5,5 @@ const marketRoutes = require('express').Router();
 
 marketRoutes.use(ExpressAdapter.execute(authUseCase))
 marketRoutes.post('/market', ExpressAdapter.execute(createMarketUseCase));
-marketRoutes.get('/market/:id', ExpressAdapter.execute(listMarketProductsUseCase))
-
+marketRoutes.get('/market/:marketId?/:id?', ExpressAdapter.execute(listMarketProductsUseCase))
 module.exports = { marketRoutes }

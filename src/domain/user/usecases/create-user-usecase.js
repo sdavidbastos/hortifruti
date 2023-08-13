@@ -25,15 +25,13 @@ class CreateUserUseCase {
                 return HttpResponse.badRequest(new InvalidParamError('already registered email'))
             }
             const hashPassword = await this.encrypt.hash(data.password);
-            const [token] = await Promise.all([
-                this.token.create(data.id),
-                this.client.user.create({
-                    data: {
-                        ...data, password: hashPassword
-                    },
-                }),
-            ])
-            return HttpResponse.ok(token);
+            const user = await this.client.user.create({
+                data: {
+                    ...data, password: hashPassword
+                },
+            })
+            const token = await this.token.create(user.id)
+            return HttpResponse.ok({ authorization: token });
         } catch (error) {
             return HttpResponse.serverError()
         }

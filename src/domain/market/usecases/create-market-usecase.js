@@ -1,4 +1,4 @@
-const { MissingParamError, InvalidParamError } = require("../../../utils/errors");
+const { MissingParamError } = require("../../../utils/errors");
 const { HttpResponse } = require("../../../utils/helpers/http-response");
 
 class CreateMarketUseCase {

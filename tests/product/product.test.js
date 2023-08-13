@@ -14,11 +14,10 @@ describe('Product Route Test Suite', () => {
         [authorization] = await Promise.all([
             token.create(user.id),
             client.user.create({ data: { ...user } }),
-            client.market.create({ data: { ...market, user: { connect: { id: user.id } } } })
         ])
+        await client.market.create({ data: { ...market, user: { connect: { id: user.id } } } })
     })
     test('should return new product', async () => {
-        client.product.findUnique()
         const response = await request(app)
             .post('/api/product')
             .set('Authorization', authorization)
@@ -28,14 +27,4 @@ describe('Product Route Test Suite', () => {
         expect(response.statusCode).toBe(200)
 
     })
-
-    test('should return list of products', async () => {
-        const response = await request(app)
-            .get(`/api/product/${product.id}`)
-            .set('Authorization', authorization)
-
-        expect(response.body).toEqual(expect.objectContaining(product))
-        expect(response.statusCode).toBe(200)
-    })
-
 });

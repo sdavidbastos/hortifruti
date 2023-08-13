@@ -7,13 +7,13 @@ const { UserBuilder } = require('../builders');
 
 describe('User Route Test Suite', () => {
     const { token } = HelperFactory.execute()
-    
+
     test('should create user', async () => {
         const user = new UserBuilder().build()
         const response = await request(app)
             .post('/api/user')
             .send({ data: user });
-        const decodePayload = await token.verify(response.body);
+        const decodePayload = await token.verify(response.body.authorization);
         expect(user.id).toEqual(decodePayload.id)
         expect(response.status).toBe(200)
     });

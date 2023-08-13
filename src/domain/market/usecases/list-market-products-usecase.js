@@ -6,10 +6,16 @@ class ListMarketProductsUseCase {
     }
     async execute(httpRequest) {
         try {
-            const { id } = httpRequest.params
+            const { marketId, id } = httpRequest.params
             const products = await this.client.product.findMany({
                 where: {
-                    marketId: id
+                    marketId,
+                    id
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    price: true,
                 }
             })
             return HttpResponse.ok(products)
